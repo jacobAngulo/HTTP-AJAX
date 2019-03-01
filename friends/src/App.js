@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import axios from "axios";
 import FriendsList from "./components/FriendsList";
 import Friend from "./components/Friend";
-import AddFriendForm from "./components/AddFriendForm";
+import FriendForm from "./components/FriendForm";
 import { Route, NavLink } from "react-router-dom";
 import "./App.css";
 
 class App extends Component {
-  state = {
-    friends: []
-  };
+  constructor() {
+    super();
+    this.state = {
+      activeFriend: null,
+      friends: []
+    };
+  }
 
   componentDidMount() {
     axios
@@ -48,12 +52,35 @@ class App extends Component {
       .catch(err => console.log("ERR", err));
   };
 
+  setUpUpdateForm = (e, friend) => {
+    e.preventDefault();
+    this.setState({
+      activeFriend: friend
+    });
+    this.props.history.push("/friend-form");
+    console.log(this.state.activeFriend);
+  };
+
+  updateFriend = (e, updatedFriend) => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5000/friends/${updatedFriend.id}`, updatedFriend)
+      .then(res => {
+        this.setState({
+          activeFriend: null,
+          friends: res.data
+        });
+        this.props.history.push("/");
+      })
+      .catch(err => console.log("ERR", err));
+  };
+
   render() {
     return (
       <div>
         <nav>
           <NavLink to="/">friends list</NavLink>
-          <NavLink to="/add-friend-form">add friend</NavLink>
+          <NavLink to="/friend-form">add friend</NavLink>
         </nav>
         <Route
           exact
@@ -61,8 +88,14 @@ class App extends Component {
           render={() => <FriendsList friends={this.state.friends} />}
         />
         <Route
-          path="/add-friend-form"
-          render={() => <AddFriendForm addFriend={this.addFriend} />}
+          path="/friend-form"
+          render={() => (
+            <FriendForm
+              addFriend={this.addFriend}
+              activeFriend={this.state.activeFriend}
+              updateFriend={this.updateFriend}
+            />
+          )}
         />
         <Route
           path="/friends/:id"
@@ -71,6 +104,7 @@ class App extends Component {
               {...props}
               friends={this.state.friends}
               deleteFriend={this.deleteFriend}
+              setUpUpdateForm={this.setUpUpdateForm}
             />
           )}
         />

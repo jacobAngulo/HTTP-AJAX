@@ -20,7 +20,7 @@ class Friend extends React.Component {
           <p>age: {friend.age}</p>
           <p>email: {friend.email}</p>
           <button onClick={(e) => this.props.deleteFriend(e, friend.id)}>delete</button>
-          <button>update</button>
+          <button onClick={e => this.props.setUpUpdateForm(e, friend)}>update</button>
         </div>
       );
     }
