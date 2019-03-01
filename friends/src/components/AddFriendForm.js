@@ -28,7 +28,7 @@ class AddFriendForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={(e) => this.props.addFriend(e, this.state.friend)}>
         <h1>add friend</h1>
         <input
           name="name"

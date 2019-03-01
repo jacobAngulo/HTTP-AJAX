@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const FriendsList = props => {
   return (
@@ -6,9 +7,11 @@ const FriendsList = props => {
       {props.friends.map(friend => {
         return (
           <li key={friend.id}>
-            <p>name: {friend.name}</p>
-            <p>{friend.age ? `age: ${friend.age}` : ""}</p>
-            <p>{friend.email ? `email: ${friend.email}` : ""}</p>
+            <Link to={`/friends/${friend.id}`}>
+              <p>name: {friend.name}</p>
+              <p>{friend.age ? `age: ${friend.age}` : ""}</p>
+              <p>{friend.email ? `email: ${friend.email}` : ""}</p>
+            </Link>
           </li>
         );
       })}
